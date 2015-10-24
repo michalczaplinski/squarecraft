@@ -47,3 +47,7 @@ div.crosshair {
     transform: translate(-50%, -50%)
 
 }
+
+#createServer, #createServerName, #connectToServer, #connectToServerName  {
+    z-index: 10;
+}
