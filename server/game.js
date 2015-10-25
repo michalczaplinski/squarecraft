@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var exphbs  = require('express-handlebars');
+var ExpressPeerServer = require('peer').ExpressPeerServer;
 
 var routes = require('../routes/index');
 
@@ -85,9 +86,7 @@ io.on('connection', function (socket) {
 });
 
 
-var express = require('express');
 var peerApp = express();
-var ExpressPeerServer = require('peer').ExpressPeerServer;
 
 peerApp.get('/', function(req, res, next) { res.send('ground control to major tom'); });
 
