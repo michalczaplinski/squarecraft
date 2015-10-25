@@ -4,7 +4,7 @@ var camera, scene, renderer, controls,
 var objects = [];
 var bullets = [];
 var prevTime = performance.now();
-var raycaster = new THREE.Raycaster();
+// var raycaster = new THREE.Raycaster();
 var mouse = new THREE.Vector2();
 
 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -130,7 +130,7 @@ function animate() {
     prevTime = time;
 
     // update the picking ray with the camera and mouse position
-    raycaster.setFromCamera( mouse, camera );
+    // raycaster.setFromCamera( mouse, camera );
     updateBullets(bullets)
 
     renderer.render( scene, camera );
