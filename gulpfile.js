@@ -2,7 +2,9 @@ var gulp = require('gulp'),
   nodemon = require('gulp-nodemon'),
   plumber = require('gulp-plumber'),
   livereload = require('gulp-livereload'),
-  sass = require('gulp-ruby-sass');
+  sass = require('gulp-ruby-sass'),
+  babel = require("gulp-babel");
+
 
 gulp.task('sass', function () {
   return sass('./public/css/**/*.scss')
@@ -12,6 +14,7 @@ gulp.task('sass', function () {
 
 gulp.task('watch', function() {
   gulp.watch('./public/css/*.scss', ['sass']);
+  gulp.watch('./public/js/*.js', ['js']);
 });
 
 gulp.task('develop', function () {
@@ -31,8 +34,16 @@ gulp.task('develop', function () {
   });
 });
 
+gulp.task("js", function () {
+  return gulp.src("./public/src/*")
+    .pipe(babel())
+    .pipe(gulp.dest("./public/js"))
+    .pipe(livereload());
+});
+
 gulp.task('default', [
   'sass',
+  'js',
   'develop',
   'watch'
 ]);
