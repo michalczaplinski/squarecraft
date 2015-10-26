@@ -35,7 +35,7 @@ gulp.task('develop', function () {
 });
 
 gulp.task("js", function () {
-  return gulp.src("./public/src/*")
+  return gulp.src("./public/src/*.js")
     .pipe(babel())
     .pipe(gulp.dest("./public/js"))
     .pipe(livereload());

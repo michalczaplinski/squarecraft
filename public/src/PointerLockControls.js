@@ -146,7 +146,7 @@ THREE.PointerLockControls = function ( camera ) {
         raycaster.ray.origin.copy( this.getObject().position );
         raycaster.ray.origin.y -= 10;
 
-        var intersections = raycaster.intersectObjects( objects );
+        var intersections = raycaster.intersectObjects( objects , true );
 
         var isOnObject = intersections.length > 0;
 
