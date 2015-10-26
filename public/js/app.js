@@ -1,6 +1,3 @@
-
-// var mouse = new THREE.Vector2();
-
 'use strict';
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -144,7 +141,6 @@ var Application = (function () {
                 _this2.render();
             });
             this.objects.forEach(function (object) {
-                // TODO this needs fixing. the "has" does not recognize if the object has the method
                 if ('update' in object) {
                     object.update();
                 }
@@ -186,19 +182,11 @@ var app = new Application();
 app.add(new Floor());
 app.add(new Lights());
 
+console.log('hello');
+console.log('hello michal');
+
 function shootBullet() {
     app.add(new Bullet(app.controls, app.camera));
 }
 
-// window.addEventListener( 'mousemove', onMouseMove, false );
 window.addEventListener('click', shootBullet, false);
-
-// function onMouseMove( event ) {
-//
-//     // calculate mouse position in normalized device coordinates
-//     // (-1 to +1) for both components
-//
-//     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-//     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-//
-// }

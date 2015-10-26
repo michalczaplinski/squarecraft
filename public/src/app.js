@@ -135,6 +135,10 @@ let app = new Application();
 app.add(new Floor());
 app.add(new Lights());
 
+console.log('hello');
+console.log('hello michal');
+
+
 function shootBullet() {
     app.add(new Bullet(app.controls, app.camera));
 }

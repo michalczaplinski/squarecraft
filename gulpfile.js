@@ -13,12 +13,12 @@ gulp.task('sass', function () {
 });
 
 gulp.task('watch', function() {
+  livereload.listen();
   gulp.watch('./public/css/*.scss', ['sass']);
-  // gulp.watch('./public/js/*.js', ['js']);
+  // gulp.watch('./public/src/*.js', ['js']);
 });
 
 gulp.task('develop', function () {
-  livereload.listen();
   nodemon({
     script: 'server/game.js',
     ext: 'js coffee',
@@ -35,7 +35,7 @@ gulp.task('develop', function () {
 });
 
 gulp.task("js", function () {
-  return gulp.src("./public/src/*")
+  return gulp.src("./public/src/*.js")
     .pipe(babel())
     .pipe(gulp.dest("./public/js"))
     .pipe(livereload());
