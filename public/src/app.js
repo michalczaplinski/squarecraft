@@ -1,6 +1,4 @@
 
-// var mouse = new THREE.Vector2();
-
 class Floor {
     constructor(settings) {
         this.geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
@@ -106,8 +104,8 @@ class Application {
             this.render();
         });
         this.objects.forEach((object) => {
-            if (object.update === 'function') {
-                object.update()
+            if ('update' in object) {
+                object.update();
             }
         });
         this.updateControls();
@@ -141,20 +139,4 @@ function shootBullet() {
     app.add(new Bullet(app.controls, app.camera));
 }
 
-
-// window.addEventListener( 'mousemove', onMouseMove, false );
 window.addEventListener( 'click', shootBullet, false );
-
-
-
-
-
-// function onMouseMove( event ) {
-//
-//     // calculate mouse position in normalized device coordinates
-//     // (-1 to +1) for both components
-//
-//     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-//     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-//
-// }

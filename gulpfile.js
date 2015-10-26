@@ -14,7 +14,7 @@ gulp.task('sass', function () {
 
 gulp.task('watch', function() {
   gulp.watch('./public/css/*.scss', ['sass']);
-  gulp.watch('./public/js/*.js', ['js']);
+  // gulp.watch('./public/js/*.js', ['js']);
 });
 
 gulp.task('develop', function () {
@@ -35,7 +35,7 @@ gulp.task('develop', function () {
 });
 
 gulp.task("js", function () {
-  return gulp.src("./public/src/*.js")
+  return gulp.src("./public/src/*")
     .pipe(babel())
     .pipe(gulp.dest("./public/js"))
     .pipe(livereload());

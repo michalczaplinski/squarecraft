@@ -144,7 +144,8 @@ var Application = (function () {
                 _this2.render();
             });
             this.objects.forEach(function (object) {
-                if (object.update === 'function') {
+                // TODO this needs fixing. the "has" does not recognize if the object has the method
+                if ('update' in object) {
                     object.update();
                 }
             });
