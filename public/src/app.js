@@ -33,13 +33,13 @@ class Floor {
 
 class Bullet {
     // TODO i need to decouple the constructor from the controls
-    constructor(controls) {
+    constructor(controls, camera) {
         this.geometry = new THREE.BoxGeometry( 1, 1, 1 );
         this.material = new THREE.MeshBasicMaterial( {color: 0x222222} );
         this.mesh = new THREE.Mesh( this.geometry, this.material );
-        this.setDirection(controls);
+        this.setDirection(controls, camera);
     }
-    setDirection(controls) {
+    setDirection(controls, camera) {
         this.mesh.position.setX(controls.getObject().position.x )
         this.mesh.position.setY(controls.getObject().position.y )
         this.mesh.position.setZ(controls.getObject().position.z )
@@ -47,7 +47,7 @@ class Bullet {
     }
 
     update() {
-        bullet.translateOnAxis(bullet.direction, 10);
+        this.mesh.translateOnAxis(this.mesh.direction, 10);
     }
 
     // TODO add the mesh getter setter to an Abstract Base Class
@@ -97,7 +97,7 @@ class Application {
     updateControls() {
         var time = performance.now();
         var delta = ( time - this.prevTime ) / 1000;
-        this.controls.update( this.objects, delta )
+        this.controls.update( [], delta )
         this.prevTime = time;
     }
 
@@ -106,7 +106,7 @@ class Application {
             this.render();
         });
         this.objects.forEach((object) => {
-            if (this.objects.update === 'function') {
+            if (object.update === 'function') {
                 object.update()
             }
         });
@@ -138,7 +138,7 @@ app.add(new Floor());
 app.add(new Lights());
 
 function shootBullet() {
-    app.add(new Bullet());
+    app.add(new Bullet(app.controls, app.camera));
 }
 
 

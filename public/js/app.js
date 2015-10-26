@@ -49,18 +49,18 @@ var Floor = (function () {
 var Bullet = (function () {
     // TODO i need to decouple the constructor from the controls
 
-    function Bullet(controls) {
+    function Bullet(controls, camera) {
         _classCallCheck(this, Bullet);
 
         this.geometry = new THREE.BoxGeometry(1, 1, 1);
         this.material = new THREE.MeshBasicMaterial({ color: 0x222222 });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
-        this.setDirection(controls);
+        this.setDirection(controls, camera);
     }
 
     _createClass(Bullet, [{
         key: 'setDirection',
-        value: function setDirection(controls) {
+        value: function setDirection(controls, camera) {
             this.mesh.position.setX(controls.getObject().position.x);
             this.mesh.position.setY(controls.getObject().position.y);
             this.mesh.position.setZ(controls.getObject().position.z);
@@ -69,7 +69,7 @@ var Bullet = (function () {
     }, {
         key: 'update',
         value: function update() {
-            bullet.translateOnAxis(bullet.direction, 10);
+            this.mesh.translateOnAxis(this.mesh.direction, 10);
         }
 
         // TODO add the mesh getter setter to an Abstract Base Class
@@ -132,7 +132,7 @@ var Application = (function () {
         value: function updateControls() {
             var time = performance.now();
             var delta = (time - this.prevTime) / 1000;
-            this.controls.update(this.objects, delta);
+            this.controls.update([], delta);
             this.prevTime = time;
         }
     }, {
@@ -144,7 +144,7 @@ var Application = (function () {
                 _this2.render();
             });
             this.objects.forEach(function (object) {
-                if (_this2.objects.update === 'function') {
+                if (object.update === 'function') {
                     object.update();
                 }
             });
@@ -186,7 +186,7 @@ app.add(new Floor());
 app.add(new Lights());
 
 function shootBullet() {
-    app.add(new Bullet());
+    app.add(new Bullet(app.controls, app.camera));
 }
 
 // window.addEventListener( 'mousemove', onMouseMove, false );
