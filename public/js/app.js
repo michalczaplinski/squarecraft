@@ -49,6 +49,7 @@ var Bullet = (function () {
     function Bullet(controls, camera) {
         _classCallCheck(this, Bullet);
 
+        // TODO remember that the bullet orientation needs to be set as well
         this.geometry = new THREE.BoxGeometry(1, 1, 1);
         this.material = new THREE.MeshBasicMaterial({ color: 0x222222 });
         this.mesh = new THREE.Mesh(this.geometry, this.material);
@@ -59,14 +60,16 @@ var Bullet = (function () {
         key: 'setDirection',
         value: function setDirection(controls, camera) {
             this.mesh.position.setX(controls.getObject().position.x);
-            this.mesh.position.setY(controls.getObject().position.y);
+            // 7 is an arbitrary offset here
+            this.mesh.position.setY(controls.getObject().position.y + 7);
             this.mesh.position.setZ(controls.getObject().position.z);
             this.mesh.direction = camera.getWorldDirection();
+            // this.mesh.translateOnAxis(camera.getWorldDirection())
         }
     }, {
         key: 'update',
         value: function update() {
-            this.mesh.translateOnAxis(this.mesh.direction, 10);
+            this.mesh.translateOnAxis(this.mesh.direction, 20);
         }
 
         // TODO add the mesh getter setter to an Abstract Base Class
@@ -129,7 +132,7 @@ var Application = (function () {
         value: function updateControls() {
             var time = performance.now();
             var delta = (time - this.prevTime) / 1000;
-            this.controls.update([], delta);
+            this.controls.update(delta);
             this.prevTime = time;
         }
     }, {
@@ -181,9 +184,6 @@ var Lights = (function () {
 var app = new Application();
 app.add(new Floor());
 app.add(new Lights());
-
-console.log('hello');
-console.log('hello michal');
 
 function shootBullet() {
     app.add(new Bullet(app.controls, app.camera));
