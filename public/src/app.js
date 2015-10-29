@@ -1,3 +1,9 @@
+class Camera extends THREE.PerspectiveCamera {
+    constructor() {
+        super();
+    }
+}
+
 
 class Floor {
     constructor(settings) {
