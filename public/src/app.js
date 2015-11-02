@@ -1,6 +1,55 @@
-class Camera extends THREE.PerspectiveCamera {
-    constructor() {
-        super();
+// class Camera extends THREE.PerspectiveCamera {
+//     constructor() {
+//         super();
+//     }
+// }
+
+
+class Player {
+    constructor(camera) {
+        this.pitchObject = new THREE.Object3D();
+        this.pitchObject.add( camera );
+
+        this.yawObject = new THREE.Object3D();
+        this.yawObject.position.y = 10;
+        this.yawObject.add( pitchObject );
+
+        var PI_2 = Math.PI / 2;
+        this.velocity = new THREE.Vector3();
+
+        document.addEventListener( 'mousemove', this.onMouseMove, false );
+
+    }
+
+    getObject() {
+    		return this.yawObject;
+    }
+
+    onMoveMouse() {
+        var movementX = event.movementX || event.mozMovementX || 0;
+		var movementY = event.movementY || event.mozMovementY || 0;
+
+        this.yawObject.rotation.y -= movementX * 0.002;
+        this.pitchObject.rotation.x -= movementY * 0.002;
+
+        this.pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
+    }
+
+    update() {
+        this.update = function(delta) {
+
+            this.velocity.x -= this.velocity.x * 10.0 * delta;
+            this.velocity.z -= this.velocity.z * 10.0 * delta;
+
+            if ( moveForward ) this.velocity.z -= 400.0 * delta;
+            if ( moveBackward ) this.velocity.z += 400.0 * delta;
+
+            if ( moveLeft ) this.velocity.x -= 400.0 * delta;
+            if ( moveRight ) this.velocity.x += 400.0 * delta;
+
+            this.getObject().translateX( this.velocity.x * delta );
+            this.getObject().translateY( this.velocity.y * delta );
+            this.getObject().translateZ( this.velocity.z * delta );
     }
 }
 
@@ -78,6 +127,7 @@ class Application {
     createScene() {
         this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
         this.camera.position.y += 10;
+        this.camera.rotation.set( 0, 0, 0 );
 
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.Fog( 0xffffff, 0, 2000 );

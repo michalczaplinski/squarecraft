@@ -6,8 +6,7 @@
 
 THREE.PointerLockControls = function (camera) {
 
-    camera.rotation.set(0, 0, 0);
-
+    // player	
     var pitchObject = new THREE.Object3D();
     pitchObject.add(camera);
 
@@ -17,12 +16,13 @@ THREE.PointerLockControls = function (camera) {
 
     var PI_2 = Math.PI / 2;
 
-    var moveForward = false;
-    var moveBackward = false;
-    var moveLeft = false;
-    var moveRight = false;
-
     var velocity = new THREE.Vector3();
+
+    // listener
+    // var moveForward = false;
+    // var moveBackward = false;
+    // var moveLeft = false;
+    // var moveRight = false;
 
     var onKeyDown = function onKeyDown(event) {
 
