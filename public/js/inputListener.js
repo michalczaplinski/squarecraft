@@ -43,6 +43,13 @@ var InputListener = (function () {
                     this.moveRight = true;
                     break;
             }
+
+            PubSub.publish('keyInput', {
+                moveForward: this.moveForward,
+                moveBackward: this.moveBackward,
+                moveLeft: this.moveLeft,
+                moveRight: this.moveRight
+            });
         }
     }, {
         key: 'onKeyUp',
@@ -69,6 +76,13 @@ var InputListener = (function () {
                     this.moveRight = false;
                     break;
             }
+
+            PubSub.publish('keyInput', {
+                moveForward: this.moveForward,
+                moveBackward: this.moveBackward,
+                moveLeft: this.moveLeft,
+                moveRight: this.moveRight
+            });
         }
     }, {
         key: 'onMouseMove',
@@ -81,13 +95,9 @@ var InputListener = (function () {
 
             // console.log(movementX, movementY)
 
-            PubSub.publish('movements', {
+            PubSub.publish('mouseMovement', {
                 x: movementX,
-                y: movementY,
-                moveForward: this.moveForward,
-                moveBackward: this.moveBackward,
-                moveLeft: this.moveLeft,
-                moveRight: this.moveRight
+                y: movementY
             });
         }
     }]);

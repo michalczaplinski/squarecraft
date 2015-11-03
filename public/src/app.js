@@ -12,17 +12,24 @@ class Player {
 
         this.movementX = 0;
         this.movementY = 0;
+        this.moveForward = false;
+        this.moveBackward = false;
+        this.moveLeft = false;
+        this.moveRight = false;
 
         this.prevTime = performance.now()
 
-        PubSub.subscribe( 'movements', (msg, data ) => {
-            this.movementX = data.x;
-            this.movementY = data.y;
+        PubSub.subscribe( 'keyInput', (msg, data) => {
             this.moveForward = data.moveForward;
             this.moveBackward = data.moveBackward;
             this.moveLeft = data.moveLeft;
             this.moveRight = data.moveRight;
         });
+
+        PubSub.subscribe( 'mouseMovement', (msg, data) => {
+            this.movementX = data.x;
+            this.movementY = data.y;
+        })
     }
 
     get() {
@@ -32,13 +39,14 @@ class Player {
     updateMouse() {
         this.yawObject.rotation.y -= this.movementX * 0.002;
         this.pitchObject.rotation.x -= this.movementY * 0.002;
-
         this.pitchObject.rotation.x = Math.max( - this.PI_2, Math.min( this.PI_2, this.pitchObject.rotation.x ) );
     }
 
     updateKeyboard() {
         var time = performance.now();
         var delta = ( time - this.prevTime ) / 1000;
+
+        console.log(this.moveForward);
 
         this.velocity.x -= this.velocity.x * 10.0 * delta;
         this.velocity.z -= this.velocity.z * 10.0 * delta;

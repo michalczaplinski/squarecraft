@@ -31,6 +31,15 @@ class InputListener {
                 this.moveRight = true;
                 break;
         }
+
+        PubSub.publish( 'keyInput',
+            {
+                moveForward: this.moveForward,
+                moveBackward: this.moveBackward,
+                moveLeft: this.moveLeft,
+                moveRight: this.moveRight
+            }
+        );
     };
 
     onKeyUp( event ) {
@@ -52,6 +61,15 @@ class InputListener {
                 this.moveRight = false;
                 break;
         }
+
+        PubSub.publish( 'keyInput',
+            {
+                moveForward: this.moveForward,
+                moveBackward: this.moveBackward,
+                moveLeft: this.moveLeft,
+                moveRight: this.moveRight
+            }
+        );
     };
 
     onMouseMove( event ) {
@@ -63,14 +81,10 @@ class InputListener {
 
         // console.log(movementX, movementY)
 
-        PubSub.publish( 'movements',
+        PubSub.publish( 'mouseMovement',
             {
                 x: movementX,
                 y: movementY,
-                moveForward: this.moveForward,
-                moveBackward: this.moveBackward,
-                moveLeft: this.moveLeft,
-                moveRight: this.moveRight
             }
         );
 

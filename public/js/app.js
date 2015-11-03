@@ -22,16 +22,23 @@ var Player = (function () {
 
         this.movementX = 0;
         this.movementY = 0;
+        this.moveForward = false;
+        this.moveBackward = false;
+        this.moveLeft = false;
+        this.moveRight = false;
 
         this.prevTime = performance.now();
 
-        PubSub.subscribe('movements', function (msg, data) {
-            _this.movementX = data.x;
-            _this.movementY = data.y;
+        PubSub.subscribe('keyInput', function (msg, data) {
             _this.moveForward = data.moveForward;
             _this.moveBackward = data.moveBackward;
             _this.moveLeft = data.moveLeft;
             _this.moveRight = data.moveRight;
+        });
+
+        PubSub.subscribe('mouseMovement', function (msg, data) {
+            _this.movementX = data.x;
+            _this.movementY = data.y;
         });
     }
 
@@ -45,7 +52,6 @@ var Player = (function () {
         value: function updateMouse() {
             this.yawObject.rotation.y -= this.movementX * 0.002;
             this.pitchObject.rotation.x -= this.movementY * 0.002;
-
             this.pitchObject.rotation.x = Math.max(-this.PI_2, Math.min(this.PI_2, this.pitchObject.rotation.x));
         }
     }, {
@@ -53,6 +59,8 @@ var Player = (function () {
         value: function updateKeyboard() {
             var time = performance.now();
             var delta = (time - this.prevTime) / 1000;
+
+            console.log(this.moveForward);
 
             this.velocity.x -= this.velocity.x * 10.0 * delta;
             this.velocity.z -= this.velocity.z * 10.0 * delta;
