@@ -15,7 +15,7 @@ gulp.task('sass', function () {
 gulp.task('watch', function() {
   livereload.listen();
   gulp.watch('./public/css/*.scss', ['sass']);
-  // gulp.watch('./public/src/*.js', ['js']);
+  gulp.watch('./public/src/*.js', ['js']);
 });
 
 gulp.task('develop', function () {

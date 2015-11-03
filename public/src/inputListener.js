@@ -11,55 +11,45 @@ class InputListener {
         document.addEventListener( 'mousemove', this.onMouseMove, false );
 
     }
-}
 
     onkeyDown( event ) {
         switch ( event.keyCode ) {
-
             case 38: // up
             case 87: // w
-                moveForward = true;
+                this.moveForward = true;
                 break;
-
             case 37: // left
             case 65: // a
-                moveLeft = true;
+                this.moveLeft = true;
                 break;
-
             case 40: // down
             case 83: // s
-                moveBackward = true;
+                this.moveBackward = true;
                 break;
-
             case 39: // right
             case 68: // d
-                moveRight = true;
+                this.moveRight = true;
                 break;
         }
-
-};
+    };
 
     onKeyUp( event ) {
         switch( event.keyCode ) {
-
             case 38: // up
             case 87: // w
-                moveForward = false;
+                this.moveForward = false;
                 break;
-
             case 37: // left
             case 65: // a
-                moveLeft = false;
+                this.moveLeft = false;
                 break;
-
             case 40: // down
             case 83: // s
-                moveBackward = false;
+                this.moveBackward = false;
                 break;
-
             case 39: // right
             case 68: // d
-                moveRight = false;
+                this.moveRight = false;
                 break;
         }
     };
@@ -69,8 +59,22 @@ class InputListener {
         var movementX = event.movementX || event.mozMovementX || 0;
         var movementY = event.movementY || event.mozMovementY || 0;
 
-        // player - publich to channel
+        // player - publish to channel
 
-        PubSub.publish( 'MY TOPIC', 'hello world!' );
+        // console.log(movementX, movementY)
 
-};
+        PubSub.publish( 'movements',
+            {
+                x: movementX,
+                y: movementY,
+                moveForward: this.moveForward,
+                moveBackward: this.moveBackward,
+                moveLeft: this.moveLeft,
+                moveRight: this.moveRight
+            }
+        );
+
+    };
+}
+
+let inputListener = new InputListener();

@@ -1,10 +1,3 @@
-// class Camera extends THREE.PerspectiveCamera {
-//     constructor() {
-//         super();
-//     }
-// }
-
-
 class Player {
     constructor(camera) {
         this.pitchObject = new THREE.Object3D();
@@ -12,44 +5,60 @@ class Player {
 
         this.yawObject = new THREE.Object3D();
         this.yawObject.position.y = 10;
-        this.yawObject.add( pitchObject );
+        this.yawObject.add( this.pitchObject );
 
-        var PI_2 = Math.PI / 2;
+        this.PI_2 = Math.PI / 2;
         this.velocity = new THREE.Vector3();
 
-        document.addEventListener( 'mousemove', this.onMouseMove, false );
+        this.movementX = 0;
+        this.movementY = 0;
 
+        this.prevTime = performance.now()
+
+        PubSub.subscribe( 'movements', (msg, data ) => {
+            this.movementX = data.x;
+            this.movementY = data.y;
+            this.moveForward = data.moveForward;
+            this.moveBackward = data.moveBackward;
+            this.moveLeft = data.moveLeft;
+            this.moveRight = data.moveRight;
+        });
     }
 
-    getObject() {
-    		return this.yawObject;
+    get() {
+    	return this.yawObject;
     }
 
-    onMoveMouse() {
-        var movementX = event.movementX || event.mozMovementX || 0;
-		var movementY = event.movementY || event.mozMovementY || 0;
+    updateMouse() {
+        this.yawObject.rotation.y -= this.movementX * 0.002;
+        this.pitchObject.rotation.x -= this.movementY * 0.002;
 
-        this.yawObject.rotation.y -= movementX * 0.002;
-        this.pitchObject.rotation.x -= movementY * 0.002;
+        this.pitchObject.rotation.x = Math.max( - this.PI_2, Math.min( this.PI_2, this.pitchObject.rotation.x ) );
+    }
 
-        this.pitchObject.rotation.x = Math.max( - PI_2, Math.min( PI_2, pitchObject.rotation.x ) );
+    updateKeyboard() {
+        var time = performance.now();
+        var delta = ( time - this.prevTime ) / 1000;
+
+        this.velocity.x -= this.velocity.x * 10.0 * delta;
+        this.velocity.z -= this.velocity.z * 10.0 * delta;
+
+        if ( this.moveForward ) { this.velocity.z -= 400.0 * delta; }
+        if ( this.moveBackward ) { this.velocity.z += 400.0 * delta; }
+
+        if ( this.moveLeft ) { this.velocity.x -= 400.0 * delta; }
+        if ( this.moveRight ) { this.velocity.x += 400.0 * delta; }
+
+        this.get().translateX( this.velocity.x * delta );
+        this.get().translateY( this.velocity.y * delta );
+        this.get().translateZ( this.velocity.z * delta );
+
+        this.prevTime = time;
     }
 
     update() {
-        this.update = function(delta) {
-
-            this.velocity.x -= this.velocity.x * 10.0 * delta;
-            this.velocity.z -= this.velocity.z * 10.0 * delta;
-
-            if ( moveForward ) this.velocity.z -= 400.0 * delta;
-            if ( moveBackward ) this.velocity.z += 400.0 * delta;
-
-            if ( moveLeft ) this.velocity.x -= 400.0 * delta;
-            if ( moveRight ) this.velocity.x += 400.0 * delta;
-
-            this.getObject().translateX( this.velocity.x * delta );
-            this.getObject().translateY( this.velocity.y * delta );
-            this.getObject().translateZ( this.velocity.z * delta );
+        this.updateMouse();
+        this.updateKeyboard();
     }
 }
 
@@ -86,18 +95,18 @@ class Floor {
 
 class Bullet {
     // TODO i need to decouple the constructor from the controls
-    constructor(controls, camera) {
+    constructor(player, camera) {
         // TODO remember that the bullet orientation needs to be set as well
         this.geometry = new THREE.BoxGeometry( 1, 1, 1 );
         this.material = new THREE.MeshBasicMaterial( {color: 0x222222} );
         this.mesh = new THREE.Mesh( this.geometry, this.material );
-        this.setDirection(controls, camera);
+        this.setDirection(player, camera);
     }
-    setDirection(controls, camera) {
-        this.mesh.position.setX(controls.getObject().position.x )
+    setDirection(player, camera) {
+        this.mesh.position.setX(player.get().position.x )
         // 7 is an arbitrary offset here
-        this.mesh.position.setY(controls.getObject().position.y + 7 )
-        this.mesh.position.setZ(controls.getObject().position.z )
+        this.mesh.position.setY(player.get().position.y + 7 )
+        this.mesh.position.setZ(player.get().position.z )
         this.mesh.direction = camera.getWorldDirection()
         // this.mesh.translateOnAxis(camera.getWorldDirection())
     }
@@ -112,25 +121,34 @@ class Bullet {
     }
 }
 
+class Light {
+    constructor() {
+        this.hemiLight = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+        this.hemiLight.position.set( 0.5, 1, 0.75 );
+        // TODO if there are more lights - add methods to iterate over and add them all
+    }
+
+    get() {
+        return this.hemiLight;
+    }
+}
 
 
 class Application {
     constructor() {
         this.objects = [];
-        this.prevTime = performance.now();
         this.createScene();
-        this.createControls();
         window.addEventListener( 'resize', evt => this.handleResize(evt), false );
         this.render();
     }
 
     createScene() {
-        this.camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-        this.camera.position.y += 10;
-        this.camera.rotation.set( 0, 0, 0 );
-
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.Fog( 0xffffff, 0, 2000 );
+
+        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
+        this.camera.position.y += 10;
+        this.camera.rotation.set( 0, 0, 0 );
 
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setClearColor( 0xffffff );
@@ -146,18 +164,6 @@ class Application {
         this.renderer.setSize( window.innerWidth, window.innerHeight );
     }
 
-    createControls() {
-        this.controls = new THREE.PointerLockControls( this.camera );
-        this.scene.add( this.controls.getObject() );
-    }
-
-    updateControls() {
-        var time = performance.now();
-        var delta = ( time - this.prevTime ) / 1000;
-        this.controls.update( delta )
-        this.prevTime = time;
-    }
-
     render() {
         requestAnimationFrame(() => {
             this.render();
@@ -167,7 +173,6 @@ class Application {
                 object.update();
             }
         });
-        this.updateControls();
         this.renderer.render(this.scene, this.camera);
   }
 
@@ -177,25 +182,18 @@ class Application {
   }
 }
 
-class Lights {
-    constructor() {
-        this.hemiLight = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
-        this.hemiLight.position.set( 0.5, 1, 0.75 );
-        // TODO if there are more lights - add methods to iterate over and add them all
-    }
-
-    get() {
-        return this.hemiLight;
-    }
-}
-
 
 let app = new Application();
+
+let player = new Player(app.camera)
+app.add(player);
+
 app.add(new Floor());
-app.add(new Lights());
+app.add(new Light());
+
 
 function shootBullet() {
-    app.add(new Bullet(app.controls, app.camera));
+    app.add(new Bullet(player, app.camera));
 }
 
 window.addEventListener( 'click', shootBullet, false );
