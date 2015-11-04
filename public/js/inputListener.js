@@ -19,8 +19,8 @@ var InputListener = (function () {
     }
 
     _createClass(InputListener, [{
-        key: 'onkeyDown',
-        value: function onkeyDown(event) {
+        key: 'onKeyDown',
+        value: function onKeyDown(event) {
             switch (event.keyCode) {
                 case 38: // up
                 case 87:

@@ -12,7 +12,7 @@ class InputListener {
 
     }
 
-    onkeyDown( event ) {
+    onKeyDown( event ) {
         switch ( event.keyCode ) {
             case 38: // up
             case 87: // w
