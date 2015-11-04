@@ -29,6 +29,13 @@ var Player = (function () {
 
         this.prevTime = performance.now();
 
+        //
+        this.avatar = new THREE.Mesh(new THREE.CubeGeometry(20, 20, 20), new THREE.MeshNormalMaterial({ color: 0x222222 }));
+        this.avatar.position.y = 10;
+        this.avatar.position.z = 1;
+
+        this.yawObject.add(this.avatar);
+
         PubSub.subscribe('keyInput', function (msg, data) {
             _this.moveForward = data.moveForward;
             _this.moveBackward = data.moveBackward;
