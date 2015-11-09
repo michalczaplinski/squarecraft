@@ -1,3 +1,11 @@
+class Camera extends THREE.PerspectiveCamera {
+    constructor() {
+        super(75, window.innerWidth / window.innerHeight, 1, 1000);
+        this.position.y += 10;
+        this.rotation.set( 0, 0, 0 );
+    }
+}
+
 class Player {
     constructor(camera) {
         this.pitchObject = new THREE.Object3D();
@@ -153,20 +161,17 @@ class Light {
 
 
 class Application {
-    constructor() {
+    constructor(camera) {
         this.objects = [];
         this.createScene();
         window.addEventListener( 'resize', evt => this.handleResize(evt), false );
         this.render();
+        this.camera = camera;
     }
 
     createScene() {
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.Fog( 0xffffff, 0, 2000 );
-
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000)
-        this.camera.position.y += 10;
-        this.camera.rotation.set( 0, 0, 0 );
 
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setClearColor( 0xffffff );
@@ -201,17 +206,19 @@ class Application {
 }
 
 
-let app = new Application();
+let camera = new Camera();
+let app = new Application(camera);
+let player = new Player(camera)
+let floor = new Floor();
+let light = new Light();
 
-let player = new Player(app.camera)
 app.add(player);
-
-app.add(new Floor());
-app.add(new Light());
+app.add(floor);
+app.add(light);
 
 
 function shootBullet() {
-    app.add(new Bullet(player, app.camera));
+    app.add(new Bullet(player, camera));
 }
 
 window.addEventListener( 'click', shootBullet, false );
