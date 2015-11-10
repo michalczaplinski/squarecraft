@@ -186,6 +186,18 @@ class Application {
 }
 
 
+class serverApplication extends Application {
+    constructor() {
+        super();
+    }
+
+    upackClientData() {
+        // here goes the code that unpacks the client data... ?
+    }
+
+}
+
+
 class clientApplication extends Application {
     constructor(camera) {
         super(camera);
