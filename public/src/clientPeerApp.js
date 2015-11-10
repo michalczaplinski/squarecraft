@@ -20,6 +20,12 @@ function createServer() {
 
     peer.on('connection', function(conn) {
         console.log('there was a connection from ' + conn.peer)
+
+        conn.on('data', function(data) {
+
+          // run the gameplay code
+
+        }
     });
 }
 
