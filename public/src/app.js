@@ -165,8 +165,8 @@ class Application {
         this.objects = [];
         this.createScene();
         window.addEventListener( 'resize', evt => this.handleResize(evt), false );
-        this.render();
         this.camera = camera;
+        this.render();
     }
 
     createScene() {
@@ -199,6 +199,7 @@ class Application {
         this.renderer.render(this.scene, this.camera);
   }
 
+  //TODO we could probably optimize by not adding the objects twice... 
   add(obj) {
     this.objects.push(obj);
     this.scene.add(obj.get());

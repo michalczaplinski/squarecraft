@@ -230,8 +230,8 @@ var Application = (function () {
         window.addEventListener('resize', function (evt) {
             return _this2.handleResize(evt);
         }, false);
-        this.render();
         this.camera = camera;
+        this.render();
     }
 
     _createClass(Application, [{
@@ -268,6 +268,8 @@ var Application = (function () {
             });
             this.renderer.render(this.scene, this.camera);
         }
+
+        //TODO we could probably optimize by not adding the objects twice...
     }, {
         key: 'add',
         value: function add(obj) {
