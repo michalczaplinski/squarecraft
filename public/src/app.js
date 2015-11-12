@@ -27,7 +27,7 @@ class Player {
 
         this.prevTime = performance.now()
 
-        //
+        // this is the visible player's mesh
         this.avatar = new THREE.Mesh(
             new THREE.CubeGeometry( 20, 20, 20 ),
             new THREE.MeshNormalMaterial( {color: 0x222222} )
@@ -35,7 +35,7 @@ class Player {
 	    this.avatar.position.y = 10;
         this.avatar.position.z = 1;
 
-	   this.yawObject.add( this.avatar );
+	    this.yawObject.add( this.avatar );
 
         PubSub.subscribe( 'keyInput', (msg, data) => {
             this.moveForward = data.moveForward;
@@ -57,7 +57,8 @@ class Player {
     updateMouse() {
         this.yawObject.rotation.y -= this.movementX * 0.002;
         this.pitchObject.rotation.x -= this.movementY * 0.002;
-        this.pitchObject.rotation.x = Math.max( - this.PI_2, Math.min( this.PI_2, this.pitchObject.rotation.x ) );
+        this.pitchObject.rotation.x = Math.max( - this.PI_2, Math.min(
+          this.PI_2, this.pitchObject.rotation.x ) );
     }
 
     updateKeyboard() {
@@ -107,9 +108,12 @@ class Floor {
         }
         for ( var i = 0, l = this.geometry.faces.length; i < l; i ++ ) {
             var face = this.geometry.faces[ i ];
-            face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-            face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-            face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+            face.vertexColors[ 0 ] = new THREE.Color()
+              .setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+            face.vertexColors[ 1 ] = new THREE.Color()
+              .setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
+            face.vertexColors[ 2 ] = new THREE.Color()
+              .setHSL( Math.random() * 0.3 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
         }
     }
     // TODO add the mesh getter setter to an Abstract Base Class
@@ -164,7 +168,6 @@ class Application {
     constructor(camera) {
         this.objects = [];
         this.createScene();
-        window.addEventListener( 'resize', evt => this.handleResize(evt), false );
         this.camera = camera;
         this.render();
     }
@@ -172,13 +175,44 @@ class Application {
     createScene() {
         this.scene = new THREE.Scene();
         this.scene.fog = new THREE.Fog( 0xffffff, 0, 2000 );
+    }
 
+    update() {
+        this.objects.forEach((object) => {
+            if ('update' in object) {
+                object.update();
+            }
+        });
+    }
+}
+
+
+class serverApplication extends Application {
+    constructor() {
+        super();
+    }
+
+    upackClientData() {
+        // here goes the code that unpacks the client data... ?
+    }
+
+}
+
+
+class clientApplication extends Application {
+    constructor(camera) {
+        super(camera);
+        // TODO: put the renderer into its own class and handleResize there
+        window.addEventListener( 'resize', evt => this.handleResize(evt), false );
+        this.createRenderer();
+        this.render();
+    }
+    createRenderer() {
         this.renderer = new THREE.WebGLRenderer();
         this.renderer.setClearColor( 0xffffff );
         this.renderer.setPixelRatio( window.devicePixelRatio );
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(this.renderer.domElement);
-
     }
 
     handleResize() {
@@ -191,24 +225,20 @@ class Application {
         requestAnimationFrame(() => {
             this.render();
         });
-        this.objects.forEach((object) => {
-            if ('update' in object) {
-                object.update();
-            }
-        });
+        this.update();
         this.renderer.render(this.scene, this.camera);
-  }
+    }
 
-  //TODO we could probably optimize by not adding the objects twice... 
-  add(obj) {
-    this.objects.push(obj);
-    this.scene.add(obj.get());
-  }
+    //TODO we could probably optimize by not adding the objects twice...
+    add(obj) {
+        this.objects.push(obj);
+        this.scene.add(obj.get());
+    }
 }
 
 
 let camera = new Camera();
-let app = new Application(camera);
+let app = new ClientApplication(camera);
 let player = new Player(camera)
 let floor = new Floor();
 let light = new Light();
