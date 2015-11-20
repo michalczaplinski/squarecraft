@@ -1,3 +1,5 @@
+import THREE from 'three.js'
+
 export default class Camera extends THREE.PerspectiveCamera {
     constructor() {
         super(75, window.innerWidth / window.innerHeight, 1, 1000);

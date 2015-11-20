@@ -20,6 +20,7 @@ System.config({
     "bootstrap": "github:twbs/bootstrap@3.3.5",
     "core-js": "npm:core-js@1.2.6",
     "jquery": "github:components/jquery@2.1.4",
+    "js-binarypack": "npm:js-binarypack@0.0.9",
     "lodash": "npm:lodash@3.10.1",
     "mroderick/PubSubJS": "github:mroderick/PubSubJS@1.5.3",
     "peerjs": "npm:peerjs@0.3.14",

@@ -1,3 +1,5 @@
+import THREE from 'three.js'
+
 export default class Floor {
     constructor(settings) {
         this.geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );

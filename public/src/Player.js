@@ -1,3 +1,5 @@
+import THREE from 'three.js'
+
 export default class Player {
     constructor(camera) {
         this.pitchObject = new THREE.Object3D();

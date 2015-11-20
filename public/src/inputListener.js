@@ -1,4 +1,6 @@
-class InputListener {
+import 'mroderick/PubSubJS/pubsub'
+
+export default class InputListener {
     constructor() {
 
         this.moveForward = false;

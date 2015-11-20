@@ -2,9 +2,10 @@ import 'jquery'
 import 'lodash'
 import 'peerjs'
 import 'mroderick/PubSubJS/pubsub'
-import 'three.js'
+import THREE from 'three.js'
 import 'socket.io-client'
 
+import InputListener from './InputListener'
 import Player from './Player';
 import Camera from './Camera';
 import Floor from './Floor';

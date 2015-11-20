@@ -1,3 +1,5 @@
+import THREE from 'three.js'
+
 export default class Bullet {
     // TODO i need to decouple the constructor from the controls
     constructor(player, camera) {

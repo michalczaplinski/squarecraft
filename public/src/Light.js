@@ -1,3 +1,5 @@
+import THREE from 'three.js'
+
 export default class Light {
     constructor() {
         this.hemiLight = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
