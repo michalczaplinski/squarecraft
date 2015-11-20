@@ -1,3 +1,6 @@
+import 'jquery'
+import 'peerjs'
+
 $(document).ready(function() {
 
     $('#createServer').on('click', function() {
@@ -25,7 +28,7 @@ function createServer() {
 
           // run the gameplay code
 
-        }
+        });
     });
 }
 
@@ -35,3 +38,5 @@ function connectToServer() {
     var peer = new Peer('nutella', {host: 'localhost', port: 9000, path: '/api'});
     var conn = peer.connect(serverName);
 }
+
+export { createServer, connectToServer }
