@@ -72,7 +72,7 @@ export default class InputListener {
             moveForward: this.moveForward,
             moveBackward: this.moveBackward,
             moveLeft: this.moveLeft,
-            moveRight: this.moveRight
+            moveRight: this.moveRight,
             x: this.movementX,
             y: this.movementY
         });

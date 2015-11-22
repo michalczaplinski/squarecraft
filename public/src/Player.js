@@ -31,16 +31,6 @@ export default class Player {
 
 	    this.yawObject.add( this.avatar );
 
-        // TODO: remove
-        PubSub.subscribe( 'serverUpdate', (msg, data) => {
-            this.moveForward = data.moveForward;
-            this.moveBackward = data.moveBackward;
-            this.moveLeft = data.moveLeft;
-            this.moveRight = data.moveRight;
-            this.movementX = data.x;
-            this.movementY = data.y;
-        })
-        // until here
     }
 
     get() {

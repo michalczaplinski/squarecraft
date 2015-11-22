@@ -41,21 +41,12 @@ class serverApplication extends Application {
 
         PubSub.subscribe('userInput', (msg, data) => {
             this.incomingDataBuffer.push(data);
-        })
+        });
 
-        this.buffer = this.buffer();
         run();
     }
 
-    * buffer() {
-        while(true) {
-            yield this.incomingDataBuffer.shift();
-        }
-    }
-
-    update() {
-        let newPositions = this.buffer().next().value;
-        
+    update(newPositions) {
         this.objects.forEach((object) => {
             if ('updatePosition' in object) {
                 object.updatePosition(newPositions);
@@ -65,7 +56,8 @@ class serverApplication extends Application {
 
     run() {
         while (true) {
-            update();
+            let newPositions = this.incomingDataBuffer.shift();
+            update(newPositions);
         }
     }
 
@@ -106,13 +98,12 @@ class ClientApplication extends Application {
         this.renderer.render(this.scene, this.camera);
     }
 
-    update() {
-        // TODO: listen for the events
-        // this.objects.forEach((object) => {
-        //     if ('update' in object) {
-        //         object.update();
-        //     }
-        // });
+    update(newPositions) {
+        this.objects.forEach((object) => {
+            if ('updatePosition' in object) {
+                object.updatePosition(newPositions);
+            }
+        });
     }
 
 }
