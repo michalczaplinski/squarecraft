@@ -1,9 +1,5 @@
-import 'jquery'
-import 'lodash'
-import 'peerjs'
-import 'mroderick/PubSubJS/pubsub'
 import THREE from 'three.js'
-import 'socket.io-client'
+import MethodNotImplementedError from './errors'
 
 import InputListener from './InputListener'
 import Player from './Player';
@@ -26,11 +22,7 @@ class Application {
     }
 
     update() {
-        this.objects.forEach((object) => {
-            if ('update' in object) {
-                object.update();
-            }
-        });
+        throw new MethodNotImplementedError()
     }
 
     //TODO we could probably optimize by not adding the objects twice...
@@ -48,6 +40,18 @@ class serverApplication extends Application {
 
     upackClientData() {
         // here goes the code that unpacks the client data... ?
+    }
+
+    updatePositions(newPositions) {
+        this.objects.forEach((object) => {
+            if ('updatePosition' in object) {
+                object.updatePosition();
+            }
+        });
+    }
+
+    createNewObjects() {
+        // TODO: code here
     }
 
 }
@@ -83,6 +87,14 @@ class ClientApplication extends Application {
         this.renderer.render(this.scene, this.camera);
     }
 
+    update() {
+        this.objects.forEach((object) => {
+            if ('update' in object) {
+                object.update();
+            }
+        });
+    }
+
 }
 
 
@@ -91,6 +103,7 @@ let app = new ClientApplication(camera);
 let player = new Player(camera)
 let floor = new Floor();
 let light = new Light();
+let inputListener = new InputListener();
 
 app.add(player);
 app.add(floor);

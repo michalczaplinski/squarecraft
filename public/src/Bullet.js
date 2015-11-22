@@ -22,6 +22,12 @@ export default class Bullet {
         this.mesh.translateOnAxis(this.mesh.direction, 20);
     }
 
+    updatePosition(newPositions) {
+        this.get().position.setX(newPositions.x);
+        this.get().position.setY(newPositions.y);
+        this.get().position.setZ(newPositions.z);
+    }
+
     // TODO add the mesh getter setter to an Abstract Base Class
     get() {
         return this.mesh;

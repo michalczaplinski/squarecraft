@@ -34,14 +34,7 @@ export default class InputListener {
                 break;
         }
 
-        PubSub.publish( 'keyInput',
-            {
-                moveForward: this.moveForward,
-                moveBackward: this.moveBackward,
-                moveLeft: this.moveLeft,
-                moveRight: this.moveRight
-            }
-        );
+        sendInput();
     };
 
     onKeyUp( event ) {
@@ -64,33 +57,29 @@ export default class InputListener {
                 break;
         }
 
-        PubSub.publish( 'keyInput',
+        sendInput();
+    };
+
+    onMouseMove( event ) {
+
+        this.movementX = event.movementX || event.mozMovementX || 0;
+        this.movementY = event.movementY || event.mozMovementY || 0;
+
+        sendInput();
+
+    };
+
+    sendInput() {
+
+        PubSub.publish( 'userInput',
             {
                 moveForward: this.moveForward,
                 moveBackward: this.moveBackward,
                 moveLeft: this.moveLeft,
                 moveRight: this.moveRight
+                x: this.movementX,
+                y: this.movementY,
             }
         );
-    };
-
-    onMouseMove( event ) {
-
-        var movementX = event.movementX || event.mozMovementX || 0;
-        var movementY = event.movementY || event.mozMovementY || 0;
-
-        // player - publish to channel
-
-        // console.log(movementX, movementY)
-
-        PubSub.publish( 'mouseMovement',
-            {
-                x: movementX,
-                y: movementY,
-            }
-        );
-
-    };
+    }
 }
-
-let inputListener = new InputListener();

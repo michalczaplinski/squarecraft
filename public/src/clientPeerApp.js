@@ -1,5 +1,6 @@
 import 'jquery'
 import 'peerjs'
+import './ClientConnectionProxy'
 
 $(document).ready(function() {
 
@@ -26,7 +27,7 @@ function createServer() {
 
         conn.on('data', function(data) {
 
-          // run the gameplay code
+          // run the SERVE gameplay code
 
         });
     });
@@ -36,5 +37,7 @@ function connectToServer() {
 
     var serverName = document.getElementById('connectToServerName').value;
     var peer = new Peer('nutella', {host: 'localhost', port: 9000, path: '/api'});
-    var conn = peer.connect(serverName);
+
+    let proxy = new ClientConnectionProxy(serverName);
+
 }

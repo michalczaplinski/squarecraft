@@ -31,17 +31,16 @@ export default class Player {
 
 	    this.yawObject.add( this.avatar );
 
-        PubSub.subscribe( 'keyInput', (msg, data) => {
+        // TODO: remove
+        PubSub.subscribe( 'serverUpdate', (msg, data) => {
             this.moveForward = data.moveForward;
             this.moveBackward = data.moveBackward;
             this.moveLeft = data.moveLeft;
             this.moveRight = data.moveRight;
-        });
-
-        PubSub.subscribe( 'mouseMovement', (msg, data) => {
             this.movementX = data.x;
             this.movementY = data.y;
         })
+        // until here
     }
 
     get() {
@@ -80,5 +79,11 @@ export default class Player {
     update() {
         this.updateMouse();
         this.updateKeyboard();
+    }
+
+    updatePosition(newPositions) {
+        this.get().position.setX(newPositions.x);
+        this.get().position.setY(newPositions.y);
+        this.get().position.setZ(newPositions.z);
     }
 }
