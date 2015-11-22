@@ -1,6 +1,7 @@
 import THREE from 'three.js'
-import MethodNotImplementedError from './errors'
+import 'mroderick/PubSubJS/pubsub'
 
+import MethodNotImplementedError from './errors'
 import InputListener from './InputListener'
 import Player from './Player';
 import Camera from './Camera';
@@ -36,22 +37,36 @@ class Application {
 class serverApplication extends Application {
     constructor() {
         super();
+        this.incomingDataBuffer = [];
+
+        PubSub.subscribe('userInput', (msg, data) => {
+            this.incomingDataBuffer.push(data);
+        })
+
+        this.buffer = this.buffer();
+        run();
     }
 
-    upackClientData() {
-        // here goes the code that unpacks the client data... ?
+    * buffer() {
+        while(true) {
+            yield this.incomingDataBuffer.shift();
+        }
     }
 
-    updatePositions(newPositions) {
+    update() {
+        let newPositions = this.buffer().next().value;
+        
         this.objects.forEach((object) => {
             if ('updatePosition' in object) {
-                object.updatePosition();
+                object.updatePosition(newPositions);
             }
         });
     }
 
-    createNewObjects() {
-        // TODO: code here
+    run() {
+        while (true) {
+            update();
+        }
     }
 
 }
@@ -63,7 +78,7 @@ class ClientApplication extends Application {
         // TODO: put the renderer into its own class and handleResize there
         window.addEventListener( 'resize', evt => this.handleResize(evt), false );
         this.createRenderer();
-        this.render();
+        this.run();
     }
     createRenderer() {
         this.renderer = new THREE.WebGLRenderer();
@@ -79,20 +94,25 @@ class ClientApplication extends Application {
         this.renderer.setSize( window.innerWidth, window.innerHeight );
     }
 
-    render() {
+    createNewObjects() {
+        // TODO: code here
+    }
+
+    run() {
         requestAnimationFrame(() => {
-            this.render();
+            this.run();
         });
         this.update();
         this.renderer.render(this.scene, this.camera);
     }
 
     update() {
-        this.objects.forEach((object) => {
-            if ('update' in object) {
-                object.update();
-            }
-        });
+        // TODO: listen for the events
+        // this.objects.forEach((object) => {
+        //     if ('update' in object) {
+        //         object.update();
+        //     }
+        // });
     }
 
 }

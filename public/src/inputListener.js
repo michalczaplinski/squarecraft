@@ -2,7 +2,6 @@ import 'mroderick/PubSubJS/pubsub'
 
 export default class InputListener {
     constructor() {
-
         this.moveForward = false;
         this.moveBackward = false;
         this.moveLeft = false;
@@ -61,7 +60,6 @@ export default class InputListener {
     };
 
     onMouseMove( event ) {
-
         this.movementX = event.movementX || event.mozMovementX || 0;
         this.movementY = event.movementY || event.mozMovementY || 0;
 
@@ -70,16 +68,13 @@ export default class InputListener {
     };
 
     sendInput() {
-
-        PubSub.publish( 'userInput',
-            {
-                moveForward: this.moveForward,
-                moveBackward: this.moveBackward,
-                moveLeft: this.moveLeft,
-                moveRight: this.moveRight
-                x: this.movementX,
-                y: this.movementY,
-            }
-        );
+        PubSub.publish( 'userInput', {
+            moveForward: this.moveForward,
+            moveBackward: this.moveBackward,
+            moveLeft: this.moveLeft,
+            moveRight: this.moveRight
+            x: this.movementX,
+            y: this.movementY
+        });
     }
 }
